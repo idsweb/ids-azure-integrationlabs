@@ -1,0 +1,14 @@
+{
+    "customer":"bstafford",
+    "date":"27-10-2020",
+    "store":"morrisons",
+    "outofstock":[
+            {
+                "title":"milk",
+                "code":"semiskimmedmilk",
+                "quantity":"1",
+                "units":"pints"
+            }
+        ],
+        "deliveryDate":"5-11-2020"
+}

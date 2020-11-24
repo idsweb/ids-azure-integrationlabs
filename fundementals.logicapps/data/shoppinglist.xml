@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<order>
+    <customer>bstafford</customer>
+    <date>27-10-2020</date>
+    <store>morrisons</store>
+    <shoppinglist>
+        <item>
+            <title>Milk</title>
+            <code>mss1ltr</code>
+            <quantity>1</quantity>
+            <units>litre</units>
+        </item>
+        <item>
+            <title>Walkers cheese and onion crisps</title>
+            <code>wco6pk</code>
+            <quantity>1</quantity>
+            <units>6 pack</units>
+        </item>
+        <item>
+            <title>Easy peel oranges</title>
+            <code>easplorng8pk</code>
+            <quantity>1</quantity>
+            <units>8 pack</units>
+        </item>
+        <item>
+            <title>Cheddar cheese</title>
+            <code>cchs250g</code>
+            <quantity>1</quantity>
+            <units>250g pack</units>
+        </item>
+    </shoppinglist>
+</order>

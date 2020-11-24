@@ -1,0 +1,25 @@
+{
+    "customer":"bstafford",
+    "date":"27-10-2020",
+    "store":"morrisons",
+    "shoppinglist":[
+            {
+                "title":"milk",
+                "code":"semiskimmedmilk",
+                "quantity":"1",
+                "units":"pints"
+            },
+            {
+                "title":"bread",
+                "code":"danishwhitesmall",
+                "quantity":"1",
+                "units":"loaf"
+            }, 
+            {
+                "title":"beer",
+                "code":"500mlcanlager",
+                "quantity":"1",
+                "units":"can"
+            }
+        ]
+}
