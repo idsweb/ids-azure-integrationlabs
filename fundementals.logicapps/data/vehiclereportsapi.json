@@ -1,0 +1,39 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "The API",
+      "version": "v1"
+    },
+    "paths": {
+      "/VehicleReports/CheckReg/{reg}": {
+        "get": {
+          "tags": [
+            "VehicleReports"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "reg",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "404": {
+              "description": "Not Found",
+              "schema": {
+                "$ref": "#/definitions/ProblemDetails"
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+  }

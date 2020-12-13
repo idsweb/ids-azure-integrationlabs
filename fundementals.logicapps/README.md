@@ -30,7 +30,7 @@ img here
 2. [Azure Logic Apps, Functions, and Service Bus](https://brentdacodemonkey.wordpress.com/2016/09/29/azure-logic-apps-functions-and-service-bus/)
 
 ## Publishing the sample api
-Before publishing the api run 
+Before publishing the api cd into the directory and run 
 ``` 
 dotnet publish -c Release -o ./publish
 ```
