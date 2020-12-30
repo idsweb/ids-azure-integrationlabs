@@ -1,11 +1,11 @@
-# Manipulating JSON
+# Creating JSON
 
 Great link [Transforming JSON Objects in Logic Apps](https://platform.deloitte.com.au/articles/transforming-json-objects-in-logic-apps) Posted by Paco de la Cruz on 18 May 2017.
 
 ## Options
 Integration accounts have support for transformations and of course you can link out to function apps. However for simple tasks you can use built in functions.
 
-## Using compose
+## Using compose to create JSON
 You can use a simple compose and feed it a parseJson as below:
 ```json
 "Transform_Participant_by_Using_Compose": {

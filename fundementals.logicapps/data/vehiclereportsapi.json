@@ -1,39 +1,62 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "The API",
-      "version": "v1"
-    },
-    "paths": {
-      "/VehicleReports/CheckReg/{reg}": {
-        "get": {
-          "tags": [
-            "VehicleReports"
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "reg",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Success"
-            },
-            "404": {
-              "description": "Not Found",
-              "schema": {
-                "$ref": "#/definitions/ProblemDetails"
-              }
+  "swagger": "2.0",
+  "info": {
+    "title": "The API",
+    "version": "v1"
+  },
+  "paths": {
+    "/VehicleReports/CheckReg/{reg}": {
+      "get": {
+        "tags": [
+          "VehicleReports"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reg",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
             }
           }
         }
       }
-    },
-    "definitions": {
+    }
+  },
+  "definitions": {
+    "ProblemDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": { }
+    }
   }
+}

@@ -11,11 +11,11 @@ namespace logicapps.sampleapi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class VehicleReportsController : ControllerBase
+    public class VehicleReportsController : Controller
     {
-        private readonly ILogger<OrdersController> _logger;
+        private readonly ILogger<VehicleReportsController> _logger;
 
-        public VehicleReportsController(ILogger<OrdersController> logger)
+        public VehicleReportsController(ILogger<VehicleReportsController> logger)
         {
             _logger = logger;
         }
@@ -28,11 +28,14 @@ namespace logicapps.sampleapi.Controllers
         [Route("CheckReg/{reg}")]
         public IActionResult CheckReg(string reg)
         {
-            if (reg.Contains("z"))
+            if(reg.Contains("Q")){
+                return BadRequest();
+            }
+            if (reg.Contains("NL"))
             {
                 VehicleReport report = new VehicleReport();
                 report.ReportRef = "12345";
-                report.Locations = "53.8225424, -1.6089916";
+                report.Registration = "NLO3 UAY";
                 return Ok(report);
             }
             else{
@@ -45,6 +48,6 @@ namespace logicapps.sampleapi.Controllers
     {
 
         public string ReportRef { get; set; }
-        public string Locations { get; set; }
+        public string Registration { get; set; }
     }
 }
