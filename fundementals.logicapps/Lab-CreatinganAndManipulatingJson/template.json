@@ -1,0 +1,180 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_Lab_CreatingAndManipualtingJson_name": {
+            "defaultValue": "Lab-CreatingAndManipualtingJson",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_Lab_CreatingAndManipualtingJson_name')]",
+            "location": "uksouth",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Week",
+                                "interval": 3,
+                                "startTime": "",
+                                "endTime": "",
+                                "timeZone": "Dateline Standard Time"
+                            },
+                            "metadata": {},
+                            "type": "Recurrence",
+                            "description": ""
+                        }
+                    },
+                    "actions": {
+                        "initializeLettersArray": {
+                            "runAfter": {},
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "lettersArray",
+                                        "type": "Array",
+                                        "value": "@split('A,B,C,D,E,F,G,H,J,K,L,M,N,O,P,R,S,T,U,V,W,X,Y', ',')"
+                                    }
+                                ]
+                            },
+                            "description": "Turns the letters into an array"
+                        },
+                        "createVehicleVariable": {
+                            "runAfter": {
+                                "InitializeLettersArray": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "vehicle",
+                                        "type": "Object",
+                                        "value": {
+                                            "regNumber": ""
+                                        }
+                                    }
+                                ]
+                            },
+                            "description": "holds the vehicle details including license number"
+                        },
+                        "createPlateNumVariable": {
+                            "runAfter": {
+                                "createVehicleVariable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "plateNumber",
+                                        "type": "String",
+                                        "value": "Y@{variables('lettersArray')[rand(1,23)]}@{rand(10,29)}@{variables('lettersArray')[rand(1,23)]}@{variables('lettersArray')[rand(1,23)]}@{variables('lettersArray')[rand(1,23)]}"
+                                    }
+                                ]
+                            },
+                            "description": "Initializes the plate number variable"
+                        },
+                        "SetProperty": {
+                            "runAfter": {
+                                "createPlateNumVariable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "setPropertyExample",
+                                        "type": "Object",
+                                        "value": "@setProperty(variables('vehicle'), 'regNumber', variables('plateNumber'))"
+                                    }
+                                ]
+                            },
+                            "description": "Sets a property on an object"
+                        },
+                        "AddProperty": {
+                            "runAfter": {
+                                "SetProperty": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "sampleVariable",
+                                        "type": "Object",
+                                        "value": "@addProperty(variables('vehicle'), 'make', 'Vaxhaul')"
+                                    }
+                                ]
+                            },
+                            "description": "Adds a property to the first log in the index with todays date"
+                        },
+                        "ComposeNewVehicle": {
+                            "runAfter": {
+                                "AddProperty": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "Compose",
+                            "inputs": {
+                                "newVehicle": {
+                                    "reg": "@variables('plateNumber')",
+                                    "make": "vaxhaul"
+                                }
+                            },
+                            "description": "Creates a new vehicle, the expressions are used to build the new object"
+                        },
+                        "createNewVehicleVariable": {
+                            "runAfter": {
+                                "ComposeNewVehicle": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "trackedProperties": {},
+                            "metadata": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "setPropertyVehicle",
+                                        "type": "Object",
+                                        "value": "@addProperty(setProperty(variables('vehicle'), 'regNumber', variables('plateNumber')), 'make', 'Vaxhaul')"
+                                    }
+                                ]
+                            },
+                            "description": "Creates a new variable using the returned output from setProperty"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        }
+    ]
+}
