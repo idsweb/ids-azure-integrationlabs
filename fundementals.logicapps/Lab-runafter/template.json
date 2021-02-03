@@ -1,0 +1,162 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_schemaErrorHandling_name": {
+            "defaultValue": "schemaErrorHandling",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_schemaErrorHandling_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Project": "logicapps"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Day",
+                                "interval": 3
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "Compose": {
+                            "runAfter": {},
+                            "type": "Compose",
+                            "inputs": {
+                                "anArray": [
+                                    {
+                                        "property1": "1",
+                                        "property2": "2"
+                                    },
+                                    {
+                                        "property1": "1"
+                                    },
+                                    {
+                                        "property1": "1",
+                                        "property2": "2"
+                                    }
+                                ]
+                            }
+                        },
+                        "For_each": {
+                            "foreach": "@body('Parse_JSON')['anArray']",
+                            "actions": {
+                                "Parse_JSON_2": {
+                                    "runAfter": {},
+                                    "type": "ParseJson",
+                                    "inputs": {
+                                        "content": "@items('For_each')",
+                                        "schema": {
+                                            "$schema": "http://json-schema.org/draft-04/schema#",
+                                            "properties": {
+                                                "property1": {
+                                                    "type": "string"
+                                                },
+                                                "property2": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "property1",
+                                                "property2"
+                                            ],
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "Parse_JSON_failure": {
+                                    "runAfter": {
+                                        "Parse_JSON_2": [
+                                            "Failed",
+                                            "Skipped",
+                                            "TimedOut"
+                                        ]
+                                    },
+                                    "type": "Compose",
+                                    "inputs": "fail"
+                                },
+                                "Parse_JSON_success": {
+                                    "runAfter": {
+                                        "Parse_JSON_2": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Compose",
+                                    "inputs": "success"
+                                }
+                            },
+                            "runAfter": {
+                                "Parse_JSON": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Foreach"
+                        },
+                        "Parse_JSON": {
+                            "runAfter": {
+                                "Compose": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ParseJson",
+                            "inputs": {
+                                "content": "@outputs('Compose')",
+                                "schema": {
+                                    "$schema": "http://json-schema.org/draft-04/schema#",
+                                    "properties": {
+                                        "anArray": {
+                                            "items": [
+                                                {}
+                                            ],
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "anArray"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "for_each_fail": {
+                            "runAfter": {
+                                "For_each": [
+                                    "Failed",
+                                    "TimedOut",
+                                    "Skipped"
+                                ]
+                            },
+                            "type": "Compose",
+                            "inputs": "fail"
+                        },
+                        "for_each_success": {
+                            "runAfter": {
+                                "For_each": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Compose",
+                            "inputs": "success"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        }
+    ]
+}

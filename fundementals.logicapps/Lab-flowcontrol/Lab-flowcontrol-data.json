@@ -1,0 +1,64 @@
+{
+    "messages": [
+        {
+            "personalDetails": {
+                "name": {
+                    "firstName": "Hue",
+                    "lastName": "Jass"
+                },
+                "address": {
+                    "postCode": "LS5 3PQ",
+                    "address": "13 Some Street"
+                },
+                "contact": {
+                    "phoneNumber": "",
+                    "email": "someguy@googlemail.com",
+                    "preferredContact": "email"
+                },
+                "requireReceipt": true
+            },
+            "receiveEmailSummary": true,
+            "id": "53aa43cc-4472-4af2-8a4b-46bfa76b6c06"
+        },
+        {
+            "personalDetails": {
+                "name": {
+                    "firstName": "George",
+                    "lastName": "Washington"
+                },
+                "address": {
+                    "postCode": "LS12 3XF",
+                    "address": "14 Some Street"
+                },
+                "contact": {
+                    "phoneNumber": "123455678",
+                    "email": "someguy@googlemail.com",
+                    "preferredContact": "phone"
+                },
+                "requireReceipt": true
+            },
+            "receiveEmailSummary": true,
+            "id": "99cc43cc-4472-4af2-8a4b-46bfa76b6c06"
+        },
+        {
+            "personalDetails": {
+                "name": {
+                    "firstName": "Ben",
+                    "lastName": "Stiller"
+                },
+                "address": {
+                    "postCode": "LS5 3XS",
+                    "address": "33 Some Street"
+                },
+                "contact": {
+                    "phoneNumber": "077777777777",
+                    "email": "someotherguy@googlemail.com",
+                    "preferredContact": "email"
+                },
+                "requireReceipt": false
+            },
+            "receiveEmailSummary": true,
+            "id": "99cc43cc-4472-4af2-8a4b-46bfa76b6c06"
+        }
+    ]
+}

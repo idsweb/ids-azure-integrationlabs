@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_keyvaultsecret_name": {
+            "defaultValue": "keyvaultsecret",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_keyvaultsecret_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Project": "logicapps"
+            },
+            "identity": {
+                "principalId": "acbcd64b-1244-4e81-8410-7ec15b1ae8e7",
+                "tenantId": "72325231-6924-49fe-9cb3-124d5649df9a",
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "keyvaultbaseurl": {
+                            "defaultValue": "https://kvidslogicapps001.vault.azure.net/secrets/",
+                            "type": "String"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Day",
+                                "interval": 3
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "HTTP": {
+                            "runAfter": {},
+                            "type": "Http",
+                            "inputs": {
+                                "authentication": {
+                                    "audience": "https://vault.azure.net",
+                                    "type": "ManagedServiceIdentity"
+                                },
+                                "headers": {
+                                    "Content-Type": "application/json"
+                                },
+                                "method": "GET",
+                                "queries": {
+                                    "api-version": "7.1"
+                                },
+                                "uri": "@{concat(parameters('keyvaultbaseurl'),'supersecret/')}"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        }
+    ]
+}
