@@ -1,31 +1,37 @@
 using System;
 using System.Collections.Generic;
 using Lab_servicebus.Models;
+using CsvHelper.Configuration;
+using System.IO;
+using System.Globalization;
+using CsvHelper;
+using System.Linq;
 
 namespace Lab_servicebus
 {
     public class DataRepository
     {
-        public List<Name> Names;
+        public List<Name> Names { get; set; }
 
-        public List<string> Makes;
+        public List<string> Makes { get; set; }
 
-        public string[] Colours;
+        public string[] Colours { get; set; }
 
-        public string[] CarTypes;
+        public string[] CarTypes { get; set; }
 
-        public string[] Damages;
+        public string[] Damages { get; set; }
 
-        public string[] RegNumbers;
+        public string[] RegNumbers { get; set; }
 
         private Random rand;
 
-        public string[] Emails;
-
-        public string[] PhoneNumbers;
+        public string[] Emails { get; set; }
 
         private string letters = "A,B,C,D,E,F,G,H,J,K,L,M,N,O,P,R,S,T,U,V,W,X,Y";
 
+        public AddressData[] addressData { get; set; }
+
+        private Image[] _images { get; set; }
 
         public DataRepository()
         {
@@ -34,32 +40,49 @@ namespace Lab_servicebus
             rand = new Random();
         }
 
+        public void InitializeAddressData()
+        {
+            using (var reader = new StreamReader(@"Data\addresses.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<AddressData>();
+                addressData = records.ToArray();
+            }
+        }
+
         public void Initialize()
         {
             InitializeNames();
             InitializeMakes();
+            InitializeCarTypes();
             InitializeColours();
             InitializeDamages();
             InitializeRegNumbers();
             InitializeEmails();
-            InitializePhoneNumbers();
+            InitializeAddressData();
         }
 
-        private void InitializePhoneNumbers()
+        public Image[] GetImages(string messageId, int imageCounter)
         {
-            PhoneNumbers = new string[1];
-            PhoneNumbers[0] = "077777777777";
+            _images = new Image[imageCounter];
+
+            for (int i = 0; i < imageCounter; i++)
+            {
+                _images[i] = new Image() { Name = String.Format(@"{0}/{1}", messageId, Guid.NewGuid().ToString()) };
+            }
+
+            return _images;
         }
 
         private void InitializeEmails()
         {
-            Emails = new string[1];
+            this.Emails = new string[1];
             Emails[0] = "someguy@googlemail.com";
         }
 
         private void InitializeRegNumbers()
         {
-            RegNumbers = new string[] { CreateRegNumber() };
+            this.RegNumbers = new string[] { CreateRegNumber() };
         }
 
         private string CreateRegNumber()
@@ -79,11 +102,13 @@ namespace Lab_servicebus
 
         private void InitializeNames()
         {
+            this.Names = new List<Name>();
             var n = new Name() { LastName = "Disney", FirstName = "Walt" };
             Names.Add(n);
         }
         private void InitializeMakes()
         {
+            this.Makes = new List<string>();
             Makes.Add("Land Rover");
             Makes.Add("Jaguar");
             Makes.Add("Mini");
@@ -99,7 +124,7 @@ namespace Lab_servicebus
 
         private void InitializeColours()
         {
-            string[] Colours = {
+            this.Colours = new string[]{
             "red",
             "white",
             "yellow",
@@ -114,7 +139,7 @@ namespace Lab_servicebus
 
         private void InitializeCarTypes()
         {
-            string[] CarTypes = {
+            this.CarTypes = new string[]{
             "Sedan",
             "Hatchback",
             "Saloon",
@@ -126,7 +151,7 @@ namespace Lab_servicebus
 
         private void InitializeDamages()
         {
-            string[] Damages = {
+            this.Damages = new string[]{
             "burnt out",
             "none",
             "crashed into",

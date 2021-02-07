@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 fundementals.logicapps/templates/azuredeploy.hellologicapp.template.ps1
+fundementals.logicapps/Lab-servicebus/secrets.json
