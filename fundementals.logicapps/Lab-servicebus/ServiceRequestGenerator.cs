@@ -55,8 +55,14 @@ namespace Lab_servicebus
             personalDetails.Contact.PhoneNumber = repo.addressData[i].PhoneNumber;
             personalDetails.Contact.PreferredContact = "Email";
 
-            var loc = GetLocation();
+            Location loc = null;
+            if(rand.Next(1,3) > 2){
+                loc = GetLocation();
+            }
+
             Image[] _images = repo.GetImages(id, rand.Next(1, 3));
+
+            //  upload the images to blob storage first
             await UploadImagesAsync(_images);
 
             // create a message that we can send
