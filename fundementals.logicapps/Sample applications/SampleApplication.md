@@ -11,5 +11,6 @@ Vehicles may represent a safety risk, so any vehicles deemed as a safety risk ar
 Once the report is processed an online database is updated with the details so members of the public can see if someone else has reported the issue.
 
 ## Building out the sample
+The service bus lab folder contains a console app that generates service bus messages and uploads files to blob storage.
 
 

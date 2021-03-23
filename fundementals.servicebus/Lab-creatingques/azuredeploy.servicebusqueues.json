@@ -1,0 +1,253 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceBusNamespaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": "sb-ids-standard"
+        },
+        "serviceBusQueueName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the service bus queue"
+            },
+            "defaultValue": "myqueue"
+        },
+        "ServiceBusSku": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": "Standard"
+        },
+        "serviceBusTopicName": {
+            "type": "string",
+            "metadata": {
+                "description": "Topic Name"
+            }
+        },
+        "serviceBusTopicSqlSubscriptionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the subscription"
+            },
+            "defaultValue": "foobar"
+        },
+        "serviceBusTopicCorrelationSubscriptionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the subscription"
+            },
+            "defaultValue": "stateofohio"
+        },
+        "serviceBusTopicLabelCorrelationSubscriptionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the subscription"
+            },
+            "defaultValue": "highpriority"
+        },
+        "serviceBusTopicIntCorrelationSubscriptionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the subscription"
+            },
+            "defaultValue": "age23"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[parameters('serviceBusNamespaceName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('ServiceBusSku')]"
+            },
+            "properties": {},
+            "resources": [
+                {
+                    "type": "Queues",
+                    "apiVersion": "2017-04-01",
+                    "name": "[parameters('serviceBusQueueName')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'))]"
+                    ],
+                    "properties": {
+                        "lockDuration": "PT30S",
+                        "maxSizeInMegabytes": 1024,
+                        "requiresDuplicateDetection": false,
+                        "requiresSession": false,
+                        "defaultMessageTimeToLive": "PT30M",
+                        "deadLetteringOnMessageExpiration": false,
+                        "duplicateDetectionHistoryTimeWindow": "PT1M",
+                        "maxDeliveryCount": 10,
+                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                        "enablePartitioning": false,
+                        "enableExpress": false
+                    }
+                },
+                {
+                    "apiVersion": "2017-04-01",
+                    "name": "[parameters('serviceBusTopicName')]",
+                    "type": "Topics",
+                    "dependsOn": [
+                        "[concat('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'))]"
+                    ],
+                    "properties": {
+                        "path": "[parameters('serviceBusTopicName')]"
+                    },
+                    "resources": [
+                        {
+                            "apiVersion": "2017-04-01",
+                            "name": "[parameters('serviceBusTopicSqlSubscriptionName')]",
+                            "type": "Subscriptions",
+                            "dependsOn": [
+                                "[parameters('serviceBusTopicName')]"
+                            ],
+                            "properties": {
+                            },
+                            "resources": [
+                                {
+                                    "apiVersion": "2017-04-01",
+                                    "name": "testRule",
+                                    "type": "Rules",
+                                    "dependsOn": [
+                                        "[parameters('serviceBusTopicSqlSubscriptionName')]"
+                                    ],
+                                    "properties": {
+                                        "filterType": "SqlFilter",
+                                        "sqlFilter": {
+                                            "sqlExpression": "foo LIKE '%bar%'",
+                                            "requiresPreprocessing": false
+                                        },
+                                        "action": {
+                                        }
+
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "apiVersion": "2017-04-01",
+                            "name": "all",
+                            "type": "Subscriptions",
+                            "dependsOn": [
+                                "[parameters('serviceBusTopicName')]"
+                            ],
+                            "properties": {
+                                "defaultMessageTimeToLive": "PT30M"
+                            }
+                        },
+                        {
+                            "apiVersion": "2017-04-01",
+                            "name": "[parameters('serviceBusTopicCorrelationSubscriptionName')]",
+                            "type": "Subscriptions",
+                            "dependsOn": [
+                                "[parameters('serviceBusTopicName')]"
+                            ],
+                            "properties": {
+                                "defaultMessageTimeToLive": "PT30M"
+                            }
+                        },
+                        {
+                            "apiVersion": "2017-04-01",
+                            "name": "[parameters('serviceBusTopicIntCorrelationSubscriptionName')]",
+                            "type": "Subscriptions",
+                            "dependsOn": [
+                                "[parameters('serviceBusTopicName')]"
+                            ],
+                            "properties": {
+                                "defaultMessageTimeToLive": "PT30M"
+                            }
+                        },
+                                                {
+                            "apiVersion": "2017-04-01",
+                            "name": "[parameters('serviceBusTopicLabelCorrelationSubscriptionName')]",
+                            "type": "Subscriptions",
+                            "dependsOn": [
+                                "[parameters('serviceBusTopicName')]"
+                            ],
+                            "properties": {
+                                "defaultMessageTimeToLive": "PT30M"
+                            }
+                        },
+                        {
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+                            "apiVersion": "2017-04-01",
+                            "name": "[concat(parameters('serviceBusNamespaceName'), '/', parameters('serviceBusTopicName'),'/',parameters('serviceBusTopicCorrelationSubscriptionName'),  '/ohiorule')]",
+                            "location": "UK West",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('serviceBusNamespaceName'), parameters('serviceBusTopicName'), parameters('serviceBusTopicCorrelationSubscriptionName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('serviceBusNamespaceName'), parameters('serviceBusTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]"
+                            ],
+                            "properties": {
+                                "action": {},
+                                "filterType": "CorrelationFilter",
+                                "correlationFilter": {
+                                    "properties": {
+                                        "state": "Ohio"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+                            "apiVersion": "2017-04-01",
+                            "name": "[concat(parameters('serviceBusNamespaceName'), '/', parameters('serviceBusTopicName'),'/',parameters('serviceBusTopicIntCorrelationSubscriptionName'),  '/agerule')]",
+                            "location": "UK West",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('serviceBusNamespaceName'), parameters('serviceBusTopicName'), parameters('serviceBusTopicIntCorrelationSubscriptionName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('serviceBusNamespaceName'), parameters('serviceBusTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]"
+                            ],
+                            "properties": {
+                                "action": {},
+                                "filterType": "CorrelationFilter",
+                                "correlationFilter": {
+                                    "properties": {
+                                        "personsage": "23"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+                            "apiVersion": "2017-04-01",
+                            "name": "[concat(parameters('serviceBusNamespaceName'), '/', parameters('serviceBusTopicName'),'/',parameters('serviceBusTopicLabelCorrelationSubscriptionName'),  '/highpriorityrule')]",
+                            "location": "UK West",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('serviceBusNamespaceName'), parameters('serviceBusTopicName'), parameters('serviceBusTopicLabelCorrelationSubscriptionName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('serviceBusNamespaceName'), parameters('serviceBusTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]"
+                            ],
+                            "properties": {
+                                "action": {},
+                                "filterType": "CorrelationFilter",
+                                "correlationFilter": {
+                                    "label": "highPriority",
+                                    "properties": {
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "outputs": {}
+}

@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 fundementals.logicapps/templates/azuredeploy.hellologicapp.template.ps1
 fundementals.logicapps/Lab-servicebus/secrets.json
+fundementals.servicebus/Lab-creatingmessages/Secrets.json
