@@ -10,7 +10,7 @@ namespace Lab_topics
     {
         static async Task Main(string[] args)
         {
-            ManagementClient m_ManagementClient = new ManagementClient("connectionstring");
+            ManagementClient m_ManagementClient = new ManagementClient("your connection string goes here");
             string topicPath = "demotopic";
             string subscriptionName = "orderSubscription";
 

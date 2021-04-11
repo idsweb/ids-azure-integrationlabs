@@ -7,7 +7,7 @@ namespace topicmessagesender
 {
     class Program
     {
-        static string connectionString = "connectionstring";
+        static string connectionString = "your connection goes here";
         static string queueName = "demotopic";
         static async Task Main()
         {
