@@ -3,6 +3,8 @@
 ## Sample
 This little sample uses creating a license plate number to explore a few basic concepts around creating objects.
 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fidsweb%2Fids-azure-integrationlabs%2Fmain%2Ffundementals.logicapps%2FLab-CreatinganAndManipulatingJson%2Ftemplate.json)
+
 Logic apps use JSON. Integration accounts have support for transformations and of course you can link out to function apps, however integration accounts have a cost attached and function apps involves calling out to compiled services. For in app manipulation you need to work with JSON.
 
 ## Workflow definition language
