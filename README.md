@@ -3,7 +3,7 @@ There is a wealth of excellent tutorials on Integration Platform as a Service (i
 
 However I often need to refer back to notes whicle covering a wide range of topics and often you dont really get down to it until you solve a particular problem. This repo is here primarily for my own benefit but I hope others find it useful.
 
-##Lab-CreatinganAndManipulatingJson
+## Lab-CreatinganAndManipulatingJson
 This little sample logic app shows some basic techniques for manipuating json
 [Creating and manipulating JSON](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-CreatinganAndManipulatingJson/Lab-CreatingAndManipualtingJson.md)
 
