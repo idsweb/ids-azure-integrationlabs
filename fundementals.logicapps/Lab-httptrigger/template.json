@@ -1,0 +1,98 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "Lab-httptrigger",
+            "location": "uksouth",
+            "tags": {
+                "Project": "logicapps"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "method": "POST",
+                                "relativePath": "reports/{reportType}",
+                                "schema": {
+                                    "$id": "http://example.com/example.json",
+                                    "$schema": "http://json-schema.org/draft-07/schema",
+                                    "additionalProperties": true,
+                                    "default": {},
+                                    "description": "The root schema comprises the entire JSON document.",
+                                    "examples": [
+                                        {
+                                            "vehicle": {
+                                                "vehicleReg": "yg62 byo"
+                                            }
+                                        }
+                                    ],
+                                    "properties": {
+                                        "vehicle": {
+                                            "$id": "#/properties/vehicle",
+                                            "additionalProperties": true,
+                                            "default": {},
+                                            "description": "Wrapper for the vehicle object",
+                                            "examples": [
+                                                {
+                                                    "vehicleReg": "yg62 byo"
+                                                }
+                                            ],
+                                            "properties": {
+                                                "vehicleReg": {
+                                                    "$id": "#/properties/vehicle/properties/vehicleReg",
+                                                    "default": "",
+                                                    "description": "The registration number of the vehicle",
+                                                    "examples": [
+                                                        "yg62 byo"
+                                                    ],
+                                                    "title": "The vehicleReg schema",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "vehicleReg"
+                                            ],
+                                            "title": "The vehicle schema",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "required": [
+                                        "vehicle"
+                                    ],
+                                    "title": "Vehicle reg schema",
+                                    "type": "object"
+                                }
+                            },
+                            "operationOptions": "EnableSchemaValidation"
+                        }
+                    },
+                    "actions": {
+                        "Response": {
+                            "runAfter": {},
+                            "type": "Response",
+                            "kind": "Http",
+                            "inputs": {
+                                "body": "@triggerOutputs()['relativePathParameters']['reportType']",
+                                "statusCode": 200
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        }
+    ]
+}

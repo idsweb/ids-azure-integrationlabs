@@ -16,6 +16,8 @@ _There is a loose theme through some of these notes around reporting - in this c
 The fudementals.logicapps folder has some logic apps demos. 
 The data folder in fundementals.logicapps has sample images and JSON messages that can be uploaded to Azure Service Bus using the explorer.
 
+__You can deploy these to your own subscription using the Deploy to Azure button in the repo.__
+
 ### Lab-CreatinganAndManipulatingJson
 
 Without liquid transforms or XSLT (which both need integration accounts) you need to manipulate JSON.
@@ -24,6 +26,4 @@ This little sample logic app shows some basic techniques for manipuating json us
 [Creating and manipulating JSON](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-CreatinganAndManipulatingJson/Lab-CreatingAndManipualtingJson.md)
 
 ### Lab-flowcontrol
-This sample shows a simple flow control with a for loop and a switch statement.
-
-[Lab-flowcontrol](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-flowcontrol/Lab-flowcontrol.md)
+This sample shows a simple flow control with a for loop and a switch statement to take an action based on a property value [Lab-flowcontrol](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-flowcontrol/Lab-flowcontrol.md).

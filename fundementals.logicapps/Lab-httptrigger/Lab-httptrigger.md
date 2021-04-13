@@ -1,7 +1,7 @@
 # Http trigger
-One of the common types of trigger is the http trigger. 
+One of the common types of trigger is the http trigger. Imagine we had a logic app that took a registration number and checked if it had already been stolen.
 
-Links:
+MSDN Links:
 [https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres](https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres)
 [https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-http-endpoint#pass-parameters-through-endpoint-url](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-http-endpoint#pass-parameters-through-endpoint-url)
 
@@ -88,6 +88,6 @@ You can add parameters like method (POST) and relative path such as reports/{rep
                 "additionalProperties": true,
                         ..........
 ```
-The URL below passes through the report type of stolen:
+The URL below is an example of the trigger taht passes through the report type of stolen:
 https://prod-04.uksouth.logic.azure.com/workflows/1cad499bxxxxxxxxxxxx3016/triggers/manual/paths/invoke/reports/stolen?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=12987394872kfhskdfjhsjfhs
 

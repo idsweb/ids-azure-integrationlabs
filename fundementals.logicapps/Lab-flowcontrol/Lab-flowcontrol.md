@@ -1,6 +1,9 @@
 # Lab flow control
 Logic apps has Flow actions to control flow in the logic app. This sample uses iteration, condition and switch style flow control.
 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fidsweb%2Fids-azure-integrationlabs%2Fmain%2Ffundementals.logicapps%2FLab-flowcontrol%2Ftemplate.json)
+
+
 The compose action contains an array of messages. The Json contains a contact property with an email and or phone number. There is also a preferred contact. The receive email summary boolean decides if a receipt email is to be sent.
 
 ```json
@@ -26,7 +29,7 @@ The compose action contains an array of messages. The Json contains a contact pr
 The flow control is as follows:
 
 1. Iterate over the messages.
-1. If the receipt is required teh contact method is evaluated
+1. If the receipt is required the contact method is evaluated
 1. A switch statement is used to send the right receipt (not implemented).
 
 ```json
