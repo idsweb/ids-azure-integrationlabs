@@ -4,148 +4,159 @@
     "parameters": {},
     "variables": {},
     "resources": [
+
         {
-            "definition": {
-                "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                "actions": {
-                    "Check_api_key": {
-                        "actions": {
-                            "Create_response": {
-                                "inputs": {
-                                    "callbackUr": "@guid()"
-                                },
-                                "runAfter": {},
-                                "type": "Compose"
-                            },
-                            "OK_response": {
-                                "inputs": {
-                                    "body": "@outputs('Create_response')",
-                                    "headers": {
-                                        "x-someheader": "somevalue"
-                                    },
-                                    "statusCode": 200
-                                },
-                                "kind": "Http",
-                                "runAfter": {
-                                    "Create_response": [
-                                        "Succeeded"
-                                    ]
-                                },
-                                "type": "Response"
-                            }
-                        },
-                        "else": {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_schemaErrorHandling_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Project": "logicapps"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "actions": {
+                        "Check_api_key": {
                             "actions": {
-                                "Access_denied_response": {
+                                "Create_response": {
                                     "inputs": {
-                                        "body": "Please supply a valid API key",
+                                        "callbackUr": "@guid()"
+                                    },
+                                    "runAfter": {},
+                                    "type": "Compose"
+                                },
+                                "OK_response": {
+                                    "inputs": {
+                                        "body": "@outputs('Create_response')",
                                         "headers": {
-                                            "apikey": "@variables('apikey')"
+                                            "x-someheader": "somevalue"
                                         },
-                                        "statusCode": 403
+                                        "statusCode": 200
                                     },
                                     "kind": "Http",
-                                    "runAfter": {},
+                                    "runAfter": {
+                                        "Create_response": [
+                                            "Succeeded"
+                                        ]
+                                    },
                                     "type": "Response"
                                 }
-                            }
-                        },
-                        "expression": {
-                            "and": [
-                                {
-                                    "equals": [
-                                        "@variables('apikey')",
-                                        "1234"
-                                    ]
-                                }
-                            ]
-                        },
-                        "runAfter": {
-                            "Set_apikey_from_header": [
-                                "Succeeded"
-                            ]
-                        },
-                        "type": "If"
-                    },
-                    "Set_apikey_from_header": {
-                        "inputs": {
-                            "variables": [
-                                {
-                                    "name": "apikey",
-                                    "type": "string",
-                                    "value": "@triggerOutputs()?['headers']?['x-apikey']"
-                                }
-                            ]
-                        },
-                        "runAfter": {},
-                        "type": "InitializeVariable"
-                    }
-                },
-                "contentVersion": "1.0.0.0",
-                "outputs": {},
-                "parameters": {},
-                "triggers": {
-                    "manual": {
-                        "inputs": {
-                            "method": "POST",
-                            "relativePath": "reports/{reportType}",
-                            "schema": {
-                                "$id": "http://example.com/example.json",
-                                "$schema": "http://json-schema.org/draft-07/schema",
-                                "additionalProperties": true,
-                                "default": {},
-                                "description": "The root schema comprises the entire JSON document.",
-                                "examples": [
-                                    {
-                                        "vehicle": {
-                                            "vehicleReg": "yg62 byo"
-                                        }
+                            },
+                            "else": {
+                                "actions": {
+                                    "Access_denied_response": {
+                                        "inputs": {
+                                            "body": "Please supply a valid API key",
+                                            "headers": {
+                                                "apikey": "@variables('apikey')"
+                                            },
+                                            "statusCode": 403
+                                        },
+                                        "kind": "Http",
+                                        "runAfter": {},
+                                        "type": "Response"
                                     }
-                                ],
-                                "properties": {
-                                    "vehicle": {
-                                        "$id": "#/properties/vehicle",
-                                        "additionalProperties": true,
-                                        "default": {},
-                                        "description": "Wrapper for the vehicle object",
-                                        "examples": [
-                                            {
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@variables('apikey')",
+                                            "1234"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "runAfter": {
+                                "Set_apikey_from_header": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Set_apikey_from_header": {
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "apikey",
+                                        "type": "string",
+                                        "value": "@triggerOutputs()?['headers']?['x-apikey']"
+                                    }
+                                ]
+                            },
+                            "runAfter": {},
+                            "type": "InitializeVariable"
+                        }
+                    },
+                    "contentVersion": "1.0.0.0",
+                    "outputs": {},
+                    "parameters": {},
+                    "triggers": {
+                        "manual": {
+                            "inputs": {
+                                "method": "POST",
+                                "relativePath": "reports/{reportType}",
+                                "schema": {
+                                    "$id": "http://example.com/example.json",
+                                    "$schema": "http://json-schema.org/draft-07/schema",
+                                    "additionalProperties": true,
+                                    "default": {},
+                                    "description": "The root schema comprises the entire JSON document.",
+                                    "examples": [
+                                        {
+                                            "vehicle": {
                                                 "vehicleReg": "yg62 byo"
                                             }
-                                        ],
-                                        "properties": {
-                                            "vehicleReg": {
-                                                "$id": "#/properties/vehicle/properties/vehicleReg",
-                                                "default": "",
-                                                "description": "The registration number of the vehicle",
-                                                "examples": [
-                                                    "yg62 byo"
-                                                ],
-                                                "title": "The vehicleReg schema",
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "vehicleReg"
-                                        ],
-                                        "title": "The vehicle schema",
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [
-                                    "vehicle"
-                                ],
-                                "title": "Vehicle reg schema",
-                                "type": "object"
-                            }
-                        },
-                        "kind": "Http",
-                        "operationOptions": "EnableSchemaValidation",
-                        "type": "Request"
+                                        }
+                                    ],
+                                    "properties": {
+                                        "vehicle": {
+                                            "$id": "#/properties/vehicle",
+                                            "additionalProperties": true,
+                                            "default": {},
+                                            "description": "Wrapper for the vehicle object",
+                                            "examples": [
+                                                {
+                                                    "vehicleReg": "yg62 byo"
+                                                }
+                                            ],
+                                            "properties": {
+                                                "vehicleReg": {
+                                                    "$id": "#/properties/vehicle/properties/vehicleReg",
+                                                    "default": "",
+                                                    "description": "The registration number of the vehicle",
+                                                    "examples": [
+                                                        "yg62 byo"
+                                                    ],
+                                                    "title": "The vehicleReg schema",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "vehicleReg"
+                                            ],
+                                            "title": "The vehicle schema",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "required": [
+                                        "vehicle"
+                                    ],
+                                    "title": "Vehicle reg schema",
+                                    "type": "object"
+                                }
+                            },
+                            "kind": "Http",
+                            "operationOptions": "EnableSchemaValidation",
+                            "type": "Request"
+                        }
                     }
-                }
-            },
-            "parameters": {}
+                },
+                "parameters": {}
+            }
         }
     ]
 }
