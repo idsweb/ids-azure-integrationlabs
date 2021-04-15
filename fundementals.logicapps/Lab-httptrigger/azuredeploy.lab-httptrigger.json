@@ -4,7 +4,6 @@
     "parameters": {},
     "variables": {},
     "resources": [
-
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
@@ -17,85 +16,12 @@
                 "state": "Enabled",
                 "definition": {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                    "actions": {
-                        "Check_api_key": {
-                            "actions": {
-                                "Create_response": {
-                                    "inputs": {
-                                        "callbackUr": "@guid()"
-                                    },
-                                    "runAfter": {},
-                                    "type": "Compose"
-                                },
-                                "OK_response": {
-                                    "inputs": {
-                                        "body": "@outputs('Create_response')",
-                                        "headers": {
-                                            "x-someheader": "somevalue"
-                                        },
-                                        "statusCode": 200
-                                    },
-                                    "kind": "Http",
-                                    "runAfter": {
-                                        "Create_response": [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type": "Response"
-                                }
-                            },
-                            "else": {
-                                "actions": {
-                                    "Access_denied_response": {
-                                        "inputs": {
-                                            "body": "Please supply a valid API key",
-                                            "headers": {
-                                                "apikey": "@variables('apikey')"
-                                            },
-                                            "statusCode": 403
-                                        },
-                                        "kind": "Http",
-                                        "runAfter": {},
-                                        "type": "Response"
-                                    }
-                                }
-                            },
-                            "expression": {
-                                "and": [
-                                    {
-                                        "equals": [
-                                            "@variables('apikey')",
-                                            "1234"
-                                        ]
-                                    }
-                                ]
-                            },
-                            "runAfter": {
-                                "Set_apikey_from_header": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "If"
-                        },
-                        "Set_apikey_from_header": {
-                            "inputs": {
-                                "variables": [
-                                    {
-                                        "name": "apikey",
-                                        "type": "string",
-                                        "value": "@triggerOutputs()?['headers']?['x-apikey']"
-                                    }
-                                ]
-                            },
-                            "runAfter": {},
-                            "type": "InitializeVariable"
-                        }
-                    },
                     "contentVersion": "1.0.0.0",
-                    "outputs": {},
                     "parameters": {},
                     "triggers": {
                         "manual": {
+                            "type": "Request",
+                            "kind": "Http",
                             "inputs": {
                                 "method": "POST",
                                 "relativePath": "reports/{reportType}",
@@ -149,11 +75,101 @@
                                     "type": "object"
                                 }
                             },
-                            "kind": "Http",
-                            "operationOptions": "EnableSchemaValidation",
-                            "type": "Request"
+                            "operationOptions": "EnableSchemaValidation"
                         }
-                    }
+                    },
+                    "actions": {
+                        "Check_api_key": {
+                            "actions": {
+                                "Create_response": {
+                                    "runAfter": {},
+                                    "type": "Compose",
+                                    "inputs": {
+                                        "callbackUr": "@guid()"
+                                    }
+                                },
+                                "OK_response": {
+                                    "runAfter": {
+                                        "Create_response": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Response",
+                                    "kind": "Http",
+                                    "inputs": {
+                                        "body": "@outputs('Create_response')",
+                                        "headers": {
+                                            "x-someheader": "somevalue"
+                                        },
+                                        "statusCode": 200
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Set_apikey_from_header": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "else": {
+                                "actions": {
+                                    "Access_denied_response": {
+                                        "runAfter": {},
+                                        "type": "Response",
+                                        "kind": "Http",
+                                        "inputs": {
+                                            "body": "Please supply a valid API key",
+                                            "headers": {
+                                                "apikey": "@variables('apikey')"
+                                            },
+                                            "statusCode": 403
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@variables('apikey')",
+                                            "1234"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Initialize_reportType": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "reportType",
+                                        "type": "string",
+                                        "value": "@{triggerOutputs()['relativePathParameters'].reportType}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Set_apikey_from_header": {
+                            "runAfter": {
+                                "Initialize_reportType": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "apikey",
+                                        "type": "string",
+                                        "value": "@triggerOutputs()?['headers']?['x-apikey']"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "outputs": {}
                 },
                 "parameters": {}
             }
