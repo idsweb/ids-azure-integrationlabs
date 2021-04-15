@@ -27,3 +27,6 @@ This little sample logic app shows some basic techniques for manipuating json us
 
 ### Lab-flowcontrol
 This sample shows a simple flow control with a for loop and a switch statement to take an action based on a property value [Lab-flowcontrol](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-flowcontrol/Lab-flowcontrol.md).
+
+### Lab-httptrigger 
+This shows how to use a http trigger, set and receive headers and set different return types. [Lab-httptrigger](https://github.com/idsweb/ids-azure-integrationlabs/tree/main/fundementals.logicapps/Lab-httptrigger)
