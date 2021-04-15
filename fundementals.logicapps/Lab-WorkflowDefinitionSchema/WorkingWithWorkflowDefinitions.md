@@ -1,8 +1,35 @@
-# Create, edit, or extend JSON for logic app workflow definitions in Azure Logic Apps 
+# Lab-WorkflowDefinitionSchema 
 
-[See the docs](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-author-definitions)
+There is no sample for this however you can follow along with the readme in VS Code to recreate the sample.
 
-## Basic structure
+The designer in the Azure portal is great for demos and learning but eventually you will end up using either Visual Studio or VS Code. This readme highlights the main components of the workflow definition. [For more informaiton see the docs](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-author-definitions).
+
+The overall Logic App resource is a resource of type _Microsoft.Logic/workflows_. Your actual workflow is defined as a _workflow definition_. The _workflow definition_ sits within the ARM template like so:
+```json
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "lab_flowcontrol",
+            "location": "uksouth",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    ...
+                },
+                "parameters": {}
+            }
+        }
+    ]
+}
+```
+## Basic workflow (definition) structure
 The basic structure looks like this:
 ```json
 {
@@ -14,10 +41,10 @@ The basic structure looks like this:
     "outputs": {}
 }
 ```
-## contentVersion
+### contentVersion
 This can be used to version your workflows.
 
-## Parameters
+### Parameters
 Parameters are passed in to your workflow. Add a parameter using the json below to your code:
 ```json
     "parameters": {
@@ -37,10 +64,10 @@ Parameters in your workflow can be passed in from an ARM template file. There is
 
 [Overview: Automate deployment for Azure Logic Apps by using Azure Resource Manager templates](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-azure-resource-manager-templates-overview).
 
-## Triggers
+### Triggers
 In Visual Studio Code create a new logic app. Add a recurrence trigger (press Ctrl+Spacebar and select recurrence). Change the frequency to week and leave the defaults.
 
-## Actions
+### Actions
 IN VS Code place your cursor in the actions and press Ctrl + Spacebar and type compose. Add a simple array as below:
 ```json
             "inputs": {

@@ -29,4 +29,10 @@ This little sample logic app shows some basic techniques for manipuating json us
 This sample shows a simple flow control with a for loop and a switch statement to take an action based on a property value [Lab-flowcontrol](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-flowcontrol/Lab-flowcontrol.md).
 
 ### Lab-httptrigger 
-This shows how to use a http trigger, set and receive headers and set different return types. [Lab-httptrigger](https://github.com/idsweb/ids-azure-integrationlabs/tree/main/fundementals.logicapps/Lab-httptrigger)
+This shows how to use a http trigger, set and receive headers and set different return types. [Lab-httptrigger](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-httptrigger/Lab-httptrigger.md)
+
+### Lab-runafter
+This lab uses a simple compose action to create JSON and then parse the schema. The runafter property is used to show how to set a failure condition [Lab-runafter](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-runafter/Lab-runafter.md).
+
+### Lab-WorkflowDefinitionSchema
+The readme in this folder steps through creating a Logic App in VS Code using JSON [Lab-WorkflowDefinitionSchema](https://github.com/idsweb/ids-azure-integrationlabs/blob/main/fundementals.logicapps/Lab-WorkflowDefinitionSchema/WorkingWithWorkflowDefinitions.md).
