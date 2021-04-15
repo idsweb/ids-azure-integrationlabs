@@ -1,5 +1,7 @@
 # Http trigger
-One of the common types of trigger is the http trigger. Imagine we had a logic app that took a registration number and checked if it had already been stolen.
+The sample below is for a simple HTTP service. It takes a report type as a path which it echoes out.
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fidsweb%2Fids-azure-integrationlabs%2Fmain%2Ffundementals.logicapps%2FLab-httptrigger%2Ftemplate.json)
 
 MSDN Links:
 [https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres](https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres)
@@ -88,6 +90,9 @@ You can add parameters like method (POST) and relative path such as reports/{rep
                 "additionalProperties": true,
                         ..........
 ```
-The URL below is an example of the trigger taht passes through the report type of stolen:
-https://prod-04.uksouth.logic.azure.com/workflows/1cad499bxxxxxxxxxxxx3016/triggers/manual/paths/invoke/reports/stolen?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=12987394872kfhskdfjhsjfhs
+You cannot run the trigger from Azure portal, instead you need to run it from a client. Open the Logic App from the designer and copy your trigger URL then run a CURL command like below (replacing the url with your own):
+```
+curl -i -X POST https://prod-19.uksouth.logic.azure.com/workflows/2edff6e8948e4ebc87244e11e914d555/triggers/manual/paths/invoke/reports/{reportType}?api-version=2016-10-01"&"sp=%2Ftriggers%2Fmanual%2Frun"&"sv=1.0"&"sig=oEB09N4xnkB0i5b2cggZfMhVbBSL0osvoscGWi51ezw -H "Content-Type: application/json" -H  "x-apikey:1234" -d "{\"vehicle\":{\"vehicleReg\":\"yg62 byo\"}}"
+```
+_note: this is all one line and the & character from the Logic apps designer needs wrapping in double quotes. 
 
