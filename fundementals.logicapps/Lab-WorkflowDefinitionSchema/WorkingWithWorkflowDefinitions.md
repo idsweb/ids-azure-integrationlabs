@@ -1,10 +1,8 @@
 # Lab-WorkflowDefinitionSchema 
 
-There is no sample for this however you can follow along with the readme in VS Code to recreate the sample.
+There is no sample for this however you can follow along with the readme in VS Code to recreate the sample. This readme highlights the main components of the workflow definition. [For more informaiton see the docs](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-author-definitions). You will need the ARM and Logic Apps extensions (not the preview extension).
 
-The designer in the Azure portal is great for demos and learning but eventually you will end up using either Visual Studio or VS Code. This readme highlights the main components of the workflow definition. [For more informaiton see the docs](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-author-definitions).
-
-The overall Logic App resource is a resource of type _Microsoft.Logic/workflows_. Your actual workflow is defined as a _workflow definition_. The _workflow definition_ sits within the ARM template like so:
+The overall Logic App resource in an ARM template is a resource of type _Microsoft.Logic/workflows_. You can author and deploy Logic Apps in VS Code then add them to your ARM template. Your actual workflow is defined as a _workflow definition_. The _workflow definition_ sits within the ARM template like so:
 ```json
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -29,6 +27,11 @@ The overall Logic App resource is a resource of type _Microsoft.Logic/workflows_
     ]
 }
 ```
+## Authoring a new Logic App in VS Code
+Step 1: Create a new Logic App in VS Code, entering your Subscription, Resource Group, Region and name.
+
+_If you are not familiar with creating Logic Apps in VS Code follow this Microsoft tutorial [Quickstart: Create and manage logic app workflow definitions by using Visual Studio Code](https://docs.microsoft.com/en-us/azure/logic-apps/quickstart-create-logic-apps-visual-studio-code)_
+
 ## Basic workflow (definition) structure
 The basic structure looks like this:
 ```json
@@ -41,10 +44,29 @@ The basic structure looks like this:
     "outputs": {}
 }
 ```
-### contentVersion
-This can be used to version your workflows.
+### The contentVersion section
+This can be used to version your workflows, for now leave it as is.
 
-### Parameters
+### Triggers
+Add a recurrence trigger (press Ctrl+Spacebar and select recurrence). Change the frequency to week and leave the defaults.
+```json
+    "triggers": {
+        "Recurrence": {
+            "recurrence": {
+                "frequency": "Week",
+                "interval": 1,
+                "startTime": "",
+                "endTime": "",
+                "timeZone": "Dateline Standard Time"
+            },
+            "metadata": {},
+            "type": "Recurrence",
+            "description": "recurrence trigger"
+        }
+    },
+```
+
+### The Parameters section
 Parameters are passed in to your workflow. Add a parameter using the json below to your code:
 ```json
     "parameters": {
@@ -57,25 +79,23 @@ Parameters are passed in to your workflow. Add a parameter using the json below 
         }
     },
 ```
-__TIP__:Always give your parameters default values so you can edit them in the portal and test run them. 
+Save your logic app, VS Code will deploy the Logic App for you.
 
-### Parameters and deployment
-Parameters in your workflow can be passed in from an ARM template file. There is an example of that later.
+Parameters in your workflow can be passed in from an ARM template file. There is an example of that later.__TIP__:Always give your parameters default values so you can edit them in the portal and test run them. 
 
 [Overview: Automate deployment for Azure Logic Apps by using Azure Resource Manager templates](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-azure-resource-manager-templates-overview).
 
-### Triggers
-In Visual Studio Code create a new logic app. Add a recurrence trigger (press Ctrl+Spacebar and select recurrence). Change the frequency to week and leave the defaults.
-
 ### Actions
-IN VS Code place your cursor in the actions and press Ctrl + Spacebar and type compose. Add a simple array as below:
+IN VS Code place your cursor in the actions and press Ctrl + Spacebar and type compose. Replace the inputs with the JSON below:
 ```json
             "inputs": {
-                "sampleArray": [
-                    "http://www.someurl.co.uk/files/file1.jpg",
-                    "http://www.someurl.co.uk/files/file2.jpg",
-                    "http://www.someurl.co.uk/files/file3.jpg",
-                    "http://www.someurl.co.uk/files/file4.jpg"
+                "filePaths": [
+                    "@concat(parameters('blobUrl'),'abandonedvehicle1.jpg')",
+                    "@concat(parameters('blobUrl'),'abandonedvehicle2.jpg')",
+                    "@concat(parameters('blobUrl'),'abandonedvehicle3.jpg')",
+                    "@concat(parameters('blobUrl'),'abandonedvehicle4.jpg')",
+                    "@concat(parameters('blobUrl'),'abandonedvehicle5.jpg')",
+                    "@concat(parameters('blobUrl'),'abandonedvehicle6.jpg')"
                 ]
             }
 ```
@@ -87,50 +107,63 @@ next add another action this time an initialize variable.
 
 You should have something like below:
 ```json
-        "InitializeVariable": {
-            "description": "",
-            "inputs": {
-                "variables": [
-                    {
-                        "name": "myVariable",
-                        "type": "Array",
-                        "value": "@outputs('Compose').sampleArray"
-                    }
-                ]
-            },
-            "metadata": {},
+"InitializeVariable": {
             "runAfter": {
-                "Compose" : [
+                "Compose": [
                     "Succeeded"
                 ]
             },
             "trackedProperties": {},
-            "type": "InitializeVariable"
+            "metadata": {},
+            "type": "InitializeVariable",
+            "inputs": {
+                "variables": [
+                    {
+                        "name": "ArFilePaths",
+                        "type": "Array",
+                        "value": "@outputs('Compose').filePaths"
+                    }
+                ]
+            },
+            "description": "Sets up the array of file paths"
         }
 ```
 Run the workflow. The value uses the expression below to access the output from the named action.
 ```json
-"@outputs('Compose').sampleArray"
+"@outputs('Compose').filePaths"
 ```
 ### Expressions
-Expressions result in JSON values at runtime and are prefixed with an @ symbol.
-
-Add a foreach action set to runafter initialize variables and use the output from that as below:
+Expressions result in JSON values at runtime and are prefixed with an @ symbol. Add a foreach action (Ctrl + Spacebar) and set the runafter to 'initialize variables' and success. Set its _foreach_ property to the variable you initialized in the previous step. In the _actions_ of the for each nest a __compose__ action and for the items add _"@item()"_. The full JSON should look like below:
 ```json
-            "foreach": "@variables('myVariable')",
-```
-The variable myVariable is the variable you set above. Set its run after to be when initializeVariables succeeded.
-
-In the actions of the for each nest a __compose__ action (call it get subsite) and for the items add the full text below:
-```json
-    "inputs": "@item()",
+    "Foreach": {
+        "actions": {
+            "Compose": {
+                "description": "",
+                "inputs": "@item()",
+                "metadata": {},
+                "runAfter": {},
+                "trackedProperties": {},
+                "type": "Compose"
+            }
+        },
+        "description": "",
+        "foreach": "@variables('arFilePaths')",
+        "metadata": {},
+        "runAfter": {
+            "IntializeVariables":[
+                "Succeeded"
+            ]
+        },
+        "trackedProperties": {},
+        "type": "Foreach"
+}
 ```
 ### Functions
 [Functions](https://docs.microsoft.com/en-us/azure/logic-apps/workflow-definition-language-functions-reference#item) can be used in expressions. 
 
-The item() function When used inside a repeating action over an array, return the current item in the array during the action's current iteration. You can also get the values from that item's properties.
+The item() function when used inside a repeating action over an array, return the current item in the array during the action's current iteration. 
 ```json
-item().body
+@item()
 ```
 
 Now modify this to use string functions to find the filename only. The {} brackets are used in string interpolation and always return a string. Notice the parameters function. The output of both functions need to be treated as a string so both are wrapped in curly brackets {}. The concat() function could also have been used.
